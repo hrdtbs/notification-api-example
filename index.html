@@ -1,0 +1,29 @@
+<link href="./style.css" rel="stylesheet"/>
+<main>
+  <button class="push">通知を送る</button>
+</main>
+<script src="./index.js"></script>
+<script>
+  let pushCount = 0;
+  document.querySelector(".push").addEventListener("click", async () => {
+    if (Notification.permission === "default") {
+      showAllowNotificationsAlert();
+      await Notification.requestPermission();
+    }
+    if (Notification.permission === "denied") {
+      showUnrestrictNotificationsAlert();
+    }
+    if (Notification.permission === "granted") {
+      const notification = new Notification(`Push notification`, {
+        body: `Push count: ${pushCount}`,
+        icon: generateIcon(pushCount),
+      });
+      notification.addEventListener("click", () => {
+        event.preventDefault();
+        window.open(`${location.href}?count=${pushCount}`);
+        notification.close();
+      });
+      pushCount++;
+    }
+  });
+</script>
